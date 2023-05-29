@@ -77,3 +77,13 @@ export const HealthValue = styled.p`
     justify-self: center;
     margin-left: 120px;
 `
+
+export const Turns = styled.p`
+    color: white;
+    font-weight: bolder;
+    font-size: 32px;
+    align-self: center;
+    position: absolute;
+    justify-self: center;
+    left: 70%;
+`
