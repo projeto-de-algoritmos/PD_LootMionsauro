@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { Container, Mionsauro } from "./Style";
+import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro } from "./Style";
 import GlobalButton from "../../components/GlobalButton/Index";
 import { CoinChange } from "../../utils/CoinChanging";
+import { useNavigate } from "react-router-dom";
 
 const FightRoom = () => {
 
     const [isBlinking, setIsBlinking] = useState<boolean>(false);
     const [attackList, setAttackList] = useState<number[]>([]);
     const [bossLifeTotal, setBossLifeTotal] = useState<number>(0);
+    const [bossLifeCurrent, setBossLifeCurrent] = useState<number>(0);
     const [turns, setTurns] = useState<number>(-1);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [healthBarPercentage, setHealthBarPercentage] = useState<number>(100);
 
-    const attacks: number[] = [5, 10, 15, 25, 40, 50, 55, 80, 100, 120];
+    const navigate = useNavigate();
+    const attacks: number[] = [5, 10, 15, 25, 40, 50, 55, 80, 100, 120, 155, 175, 250];
 
     const generateBossLifeTotal = () => {
         const min = 200;
@@ -23,6 +27,7 @@ const FightRoom = () => {
         const randomNumber = min + randomMultiple * multipleOf;
 
         setBossLifeTotal(randomNumber);
+        setBossLifeCurrent(randomNumber);
     };
 
     const getRandomAttacks = () => {
@@ -87,10 +92,38 @@ const FightRoom = () => {
         console.log(bossLifeTotal, turns, attackList);
     };
 
+    const Run = () => {
+        navigate('./menu');
+    }
+
+    const UseAttack = async (damage: number) => {
+        setBossLifeCurrent(bossLifeCurrent - damage);
+        Blink();
+    }
+
+    useEffect(() => {
+        if (bossLifeCurrent < 0) {
+            setBossLifeCurrent(bossLifeTotal);
+        }
+        setHealthBarPercentage((bossLifeCurrent * 100) / bossLifeTotal);
+    }, [bossLifeCurrent])
+
     return (
         <Container>
-            <Mionsauro src={require("../../assets/Boss.png")} isBlinking={isBlinking} />
-            <GlobalButton onClick={Blink} text="blink" primary={false} />
+            <BossArea>
+                <HealthBar>
+                    <Health health={healthBarPercentage} />
+                    <HealthValue>{bossLifeCurrent}/{bossLifeTotal}</HealthValue>
+                </HealthBar>
+                <Mionsauro src={require("../../assets/Boss.png")} isBlinking={isBlinking} />
+            </BossArea>
+            <ButtonsArea>
+                <GlobalButton onClick={() => { UseAttack(attackList[0]) }} text={attackList[0]?.toString()} primary={false} />
+                <GlobalButton onClick={() => { UseAttack(attackList[1]) }} text={attackList[1]?.toString()} primary={false} />
+                <GlobalButton onClick={() => { UseAttack(attackList[2]) }} text={attackList[2]?.toString()} primary={false} />
+                <GlobalButton onClick={() => { UseAttack(attackList[3]) }} text={attackList[3]?.toString()} primary={false} />
+                <GlobalButton onClick={Run} text="Run" primary={false} />
+            </ButtonsArea>
         </Container>
     )
 }
