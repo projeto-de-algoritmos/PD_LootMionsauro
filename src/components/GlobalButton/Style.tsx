@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.div<{ primary: boolean }>`
     display: flex;
     background-color: #461414;
     align-items: center;
     justify-content: center;
-    height: 120px;
-    width: 300px;
+    height: ${(props) => props.primary ? "120px" : "60px"};
+    width: ${(props) => props.primary ? "300px" : "150px"};
     border-radius: 10px;
     border-width: 5px;
     border-style: solid;

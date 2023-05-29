@@ -11,7 +11,7 @@ const GlobalButton = ({
     text,
     primary }: GlobalButtonInterface) => {
         return(
-            <Container onClick={onClick}>
+            <Container onClick={onClick} primary={primary}>
                 <BtnText>{text}</BtnText>
             </Container>
         )
