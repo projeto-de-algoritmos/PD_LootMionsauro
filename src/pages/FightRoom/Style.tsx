@@ -16,7 +16,11 @@ export const Container = styled.div`
     flex-direction: column;
     gap: 8px;
 `
-
+export const Portrait = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
 export const Mionsauro = styled.img<{ isBlinking: boolean }>`
     width: 250px;
     ${({ isBlinking }) =>
@@ -24,6 +28,11 @@ export const Mionsauro = styled.img<{ isBlinking: boolean }>`
         css`
       animation: ${blinkAnimation} 0.4s linear;
     `}
+`
+export const Heal = styled.img<{ active: boolean }>`
+    display: ${(props) => props.active ? 'flex' : 'none'};
+    position: fixed;
+    width: 200px;
 `
 
 export const BossArea = styled.div`

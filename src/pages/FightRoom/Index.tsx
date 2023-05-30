@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns, ModalText } from "./Style";
+import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns, ModalText, Heal, Portrait } from "./Style";
 import GlobalButton from "../../components/GlobalButton/Index";
 import { CoinChange } from "../../utils/CoinChanging";
 import { useNavigate } from "react-router-dom";
@@ -9,14 +9,15 @@ const FightRoom = () => {
 
     const [isBlinking, setIsBlinking] = useState<boolean>(false);
     const [attackList, setAttackList] = useState<number[]>([]);
-    const [bossLifeTotal, setBossLifeTotal] = useState<number>(-1);
-    const [bossLifeCurrent, setBossLifeCurrent] = useState<number>(-1);
+    const [bossLifeTotal, setBossLifeTotal] = useState<number>(1);
+    const [bossLifeCurrent, setBossLifeCurrent] = useState<number>(1);
     const [totalTurns, setTotalTurns] = useState<number>(-1);
     const [remainngTurns, setRemainingTurns] = useState<number>(-1);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [healthBarPercentage, setHealthBarPercentage] = useState<number>(100);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [win, setWin] = useState<boolean>(false);
+    const [healing, setHealing] = useState(false);
 
     const navigate = useNavigate();
     const attacks: number[] = [5, 10, 15, 25, 40, 50, 55, 80, 100, 120, 155, 175, 250];
@@ -76,6 +77,13 @@ const FightRoom = () => {
         console.log(bossLifeTotal, totalTurns, attackList);
     };
 
+    const Regen = () => {
+        setHealing(true);
+        setTimeout(() => {
+            setHealing(false);
+        }, 1200);
+    };
+
     const Run = () => {
         navigate('./menu');
     }
@@ -96,8 +104,8 @@ const FightRoom = () => {
     };
 
     const PlayAgain = () => {
-        setBossLifeTotal(-1);
-        setBossLifeCurrent(-1);
+        setBossLifeTotal(1);
+        setBossLifeCurrent(1);
         setTotalTurns(-1);
         setRemainingTurns(-1);
         setIsLoading(true);
@@ -109,7 +117,7 @@ const FightRoom = () => {
             generateValues();
         }
     }, [totalTurns]);
-    
+
     useEffect(() => {
         if (bossLifeTotal !== 0 && attackList.length > 0) {
             setIsLoading(false);
@@ -128,27 +136,22 @@ const FightRoom = () => {
         }
     }, [isLoading]);
 
-
-
     useEffect(() => {
         if (bossLifeCurrent < 0) {
+            Regen();
             setBossLifeCurrent(bossLifeTotal);
         }
         setHealthBarPercentage((bossLifeCurrent * 100) / bossLifeTotal);
     }, [bossLifeCurrent])
 
     useEffect(() => {
-        if (bossLifeCurrent === 0 || remainngTurns === 0) {
-            if (bossLifeCurrent === 0) {
-                setWin(true);
-            }
-            toggleModal();
-        }else if(remainngTurns <= 0 && totalTurns > 0){
-            toggleModal();
+        if (bossLifeCurrent === 0) {
+            setWin(true);
+            setShowModal(true);
+        } else if (remainngTurns <= 0 && totalTurns > 0) {
+            setShowModal(true);
         }
     }, [bossLifeCurrent, remainngTurns]);
-
-
 
     return (
         <Container>
@@ -158,7 +161,10 @@ const FightRoom = () => {
                     <HealthValue>{bossLifeCurrent}/{bossLifeTotal}</HealthValue>
                     <Turns>Remaining Turns {remainngTurns}/{totalTurns}</Turns>
                 </HealthBar>
-                <Mionsauro src={require("../../assets/Boss.png")} isBlinking={isBlinking} />
+                <Portrait>
+                    <Mionsauro src={require("../../assets/Boss.png")} isBlinking={isBlinking} />
+                    <Heal src={require("../../assets/healing.gif")} active={healing} />
+                </Portrait>
             </BossArea>
             <ButtonsArea>
                 <GlobalButton onClick={() => { UseAttack(attackList[0]) }} text={attackList[0]?.toString()} primary={false} />
