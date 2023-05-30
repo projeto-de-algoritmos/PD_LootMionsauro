@@ -25,8 +25,42 @@ export const HeaderText = styled.p`
 
 export const Body = styled.div`
     display: flex;
-    height: 80%;
-    justify-content: center;
+    height: 75%;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    gap: 8px;
+    margin-top: 5%;
 `;
+
+export const ModalComponentBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+`
+export const ModalComponent = styled.div`
+    width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
+export const CloseButton = styled.div`
+    position: fixed;
+    color: white;
+    font-size: 32px;
+    font-weight: bolder;
+    cursor: pointer;
+    top: 32px;
+    right: 38px;
+`
+
+export const Slected = styled.p`
+    color: green;
+    font-size: 16px;
+    font-weight: bolder;
+    margin-left: -32px;
+`
+

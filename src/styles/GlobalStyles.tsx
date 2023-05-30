@@ -1,13 +1,26 @@
-import { createGlobalStyle } from 'styled-components';
-import img from "../assets/Background.jpg";
+import { createGlobalStyle, keyframes } from 'styled-components';
+import backgroundImage from '../assets/Background2.jpg';
+
+const waterfallAnimation = keyframes`
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 200%;
+  }
+`;
 
 const GlobalStyle = createGlobalStyle`
   * {
-//    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif, 'Comic Sans', cursive;
     box-sizing: border-box;
   }
+
   body {
-    background-image: url(${img});
+    background-image: url(${backgroundImage}), url(${backgroundImage});
+    background-repeat: repeat-y;
+    background-position: 0 0, 0 100%;
+    background-size: auto, auto;
+    animation: ${waterfallAnimation} 60s linear infinite;
   }
 `;
 

@@ -103,4 +103,5 @@ export const ModalText = styled.div`
     color: gold;
     margin-top: 16px;
     margin-bottom: 16px;
+    white-space: nowrap;
 `;
