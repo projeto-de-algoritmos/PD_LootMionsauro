@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns } from "./Style";
+import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns, ModalText } from "./Style";
 import GlobalButton from "../../components/GlobalButton/Index";
 import { CoinChange } from "../../utils/CoinChanging";
 import { useNavigate } from "react-router-dom";
@@ -50,29 +50,6 @@ const FightRoom = () => {
         setAttackList(randomAttacks);
     }
 
-
-    useEffect(() => {
-        generateValues();
-    }, []);
-
-    useEffect(() => {
-        if (isLoading === false) {
-            const turns = CoinChange(attackList, bossLifeTotal);
-            setTotalTurns(turns);
-            setRemainingTurns(turns);
-            if (totalTurns === -1) {
-                setIsLoading(true);
-                generateValues();
-            }
-        }
-    }, [isLoading]);
-
-    useEffect(() => {
-        if (bossLifeTotal !== 0 && attackList.length > 0) {
-            setIsLoading(false);
-        }
-    }, [bossLifeTotal, attackList]);
-
     const generateValues = () => {
         setWin(false);
         getRandomAttacks();
@@ -109,30 +86,14 @@ const FightRoom = () => {
         Blink();
     }
 
-    useEffect(() => {
-        if (bossLifeCurrent < 0) {
-            setBossLifeCurrent(bossLifeTotal);
-        }
-        setHealthBarPercentage((bossLifeCurrent * 100) / bossLifeTotal);
-    }, [bossLifeCurrent])
-
     const Retry = () => {
         setBossLifeCurrent(bossLifeTotal);
         setRemainingTurns(totalTurns);
     };
-    
+
     const toggleModal = () => {
         setShowModal(!showModal);
     };
-
-    useEffect(() => {
-        if(bossLifeCurrent === 0 || remainngTurns === 0){
-            if(bossLifeCurrent === 0){
-                setWin(true);
-            }
-            toggleModal();
-        }
-    }, [bossLifeCurrent, remainngTurns]);
 
     const PlayAgain = () => {
         setBossLifeTotal(-1);
@@ -140,8 +101,54 @@ const FightRoom = () => {
         setTotalTurns(-1);
         setRemainingTurns(-1);
         setIsLoading(true);
-        generateValues();
-    }
+    };
+
+    useEffect(() => {
+        if (totalTurns < 0) {
+            setIsLoading(true);
+            generateValues();
+        }
+    }, [totalTurns]);
+    
+    useEffect(() => {
+        if (bossLifeTotal !== 0 && attackList.length > 0) {
+            setIsLoading(false);
+        }
+    }, [bossLifeTotal, attackList]);
+
+    useEffect(() => {
+        if (isLoading === false) {
+            const turns = CoinChange(attackList, bossLifeTotal);
+            setTotalTurns(turns);
+            setRemainingTurns(turns);
+            if (totalTurns === -1) {
+                setIsLoading(true);
+                generateValues();
+            }
+        }
+    }, [isLoading]);
+
+
+
+    useEffect(() => {
+        if (bossLifeCurrent < 0) {
+            setBossLifeCurrent(bossLifeTotal);
+        }
+        setHealthBarPercentage((bossLifeCurrent * 100) / bossLifeTotal);
+    }, [bossLifeCurrent])
+
+    useEffect(() => {
+        if (bossLifeCurrent === 0 || remainngTurns === 0) {
+            if (bossLifeCurrent === 0) {
+                setWin(true);
+            }
+            toggleModal();
+        }else if(remainngTurns <= 0 && totalTurns > 0){
+            toggleModal();
+        }
+    }, [bossLifeCurrent, remainngTurns]);
+
+
 
     return (
         <Container>
@@ -160,7 +167,18 @@ const FightRoom = () => {
                 <GlobalButton onClick={() => { UseAttack(attackList[3]) }} text={attackList[3]?.toString()} primary={false} />
                 <GlobalButton onClick={Run} text="Run" primary={false} />
             </ButtonsArea>
-            <Modal isShown={showModal} hide={toggleModal} won={win} retry={Retry} playAgain={PlayAgain} menu={Run}/>
+            <Modal isShown={showModal}>
+                {win ? <ModalText>You've beaten Mionsauro!</ModalText> : <ModalText>You lost to Mionsauro.</ModalText>}
+                {!win && <GlobalButton onClick={() => {
+                    Retry();
+                    toggleModal();
+                }} text='Retry' primary={true} />}
+                <GlobalButton onClick={() => {
+                    PlayAgain();
+                    toggleModal();
+                }} text='Play again' primary={true} />
+                <GlobalButton onClick={Run} text='Menu' primary={true} />
+            </Modal>
         </Container>
     )
 }

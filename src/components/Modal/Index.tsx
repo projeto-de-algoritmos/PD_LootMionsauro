@@ -1,43 +1,29 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { Wrapper, StyledModal, Backdrop, ModalText } from './Style';
-import GlobalButton from '../GlobalButton/Index';
+import { Wrapper, StyledModal, Backdrop } from './Style';
 
 export interface FilterModalInterface {
     isShown: boolean;
-    hide: () => void;
-    won: boolean;
-    retry: VoidFunction;
-    menu: VoidFunction;
-    playAgain: VoidFunction;
+    hide?: () => void;
 };
 
 const Modal = ({
     isShown,
     hide,
+    children
+}: FilterModalInterface & { children: React.ReactNode }) => {
 
-    won,
-    retry,
-    menu,
-    playAgain
-}: FilterModalInterface) => {
+    const backdropClick = () => {
+        if (hide) {
+            hide();
+        }
+    };
 
     const modal = (
         <React.Fragment>
-            <Backdrop />
+            <Backdrop onClick={backdropClick} />
             <Wrapper>
-                <StyledModal>
-                    {won ? <ModalText>You've beaten Mionsauro!</ModalText> : <ModalText>You lost to Mionsauro.</ModalText>}
-                    {!won && <GlobalButton onClick={() => {
-                        retry();
-                        hide();
-                    }} text='Retry' primary={true} />}
-                    <GlobalButton onClick={() => {
-                        playAgain();
-                        hide();
-                    }} text='Play again' primary={true} />
-                    <GlobalButton onClick={menu} text='Menu' primary={true} />
-                </StyledModal>
+                <StyledModal>{children}</StyledModal>
             </Wrapper>
         </React.Fragment>
     );

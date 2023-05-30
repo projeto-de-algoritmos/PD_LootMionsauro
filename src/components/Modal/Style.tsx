@@ -42,11 +42,3 @@ export const StyledModal = styled.div`
         width: 95vw;
     }
 `;
-
-export const ModalText = styled.div`
-    font-weight: bolder;
-    font-size: 32px;
-    color: gold;
-    margin-top: 16px;
-    margin-bottom: 16px;
-`

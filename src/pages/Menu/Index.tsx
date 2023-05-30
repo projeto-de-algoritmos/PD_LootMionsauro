@@ -6,8 +6,9 @@ const Menu = () => {
     const navigate = useNavigate();
 
     const startFight = () => {
-        navigate(`/fight`)
-    }
+        navigate(`/fight`);
+    };
+
     return (
         <Container>
             <Header>

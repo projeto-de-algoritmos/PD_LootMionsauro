@@ -76,7 +76,7 @@ export const HealthValue = styled.p`
     position: absolute;
     justify-self: center;
     margin-left: 120px;
-`
+`;
 
 export const Turns = styled.p`
     color: white;
@@ -86,4 +86,12 @@ export const Turns = styled.p`
     position: absolute;
     justify-self: center;
     left: 70%;
-`
+`;
+
+export const ModalText = styled.div`
+    font-weight: bolder;
+    font-size: 32px;
+    color: gold;
+    margin-top: 16px;
+    margin-bottom: 16px;
+`;
