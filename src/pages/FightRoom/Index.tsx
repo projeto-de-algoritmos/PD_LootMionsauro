@@ -4,6 +4,7 @@ import GlobalButton from "../../components/GlobalButton/Index";
 import { CoinChange } from "../../utils/CoinChanging";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal/Index";
+import LocalStorage from "../../LocalStorage";
 
 const FightRoom = () => {
 
@@ -18,6 +19,7 @@ const FightRoom = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [win, setWin] = useState<boolean>(false);
     const [healing, setHealing] = useState(false);
+    const difficulty: string = LocalStorage.getDifficulty();
 
     const navigate = useNavigate();
     const attacks: number[] = [5, 10, 15, 25, 40, 50, 55, 80, 100, 120, 155, 175, 250];
@@ -74,7 +76,6 @@ const FightRoom = () => {
                 }, 150);
             }, 150);
         }, 150);
-        console.log(bossLifeTotal, totalTurns, attackList);
     };
 
     const Regen = () => {
@@ -125,15 +126,23 @@ const FightRoom = () => {
     }, [bossLifeTotal, attackList]);
 
     useEffect(() => {
-        if (isLoading === false) {
-            const turns = CoinChange(attackList, bossLifeTotal);
-            setTotalTurns(turns);
-            setRemainingTurns(turns);
-            if (totalTurns === -1) {
-                setIsLoading(true);
-                generateValues();
-            }
+
+        let turns: number;
+        if (difficulty === 'easy') {
+            turns = CoinChange(attackList, bossLifeTotal) * 2;
+
+        } else if (difficulty === 'medium') {
+            turns = Math.trunc((CoinChange(attackList, bossLifeTotal) * 3) / 2);
+        } else {
+            turns = CoinChange(attackList, bossLifeTotal);
         }
+        setTotalTurns(turns);
+        setRemainingTurns(turns);
+        if (totalTurns === -1) {
+            setIsLoading(true);
+            generateValues();
+        }
+
     }, [isLoading]);
 
     useEffect(() => {
