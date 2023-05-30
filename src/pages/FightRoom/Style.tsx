@@ -94,14 +94,33 @@ export const Turns = styled.p`
     align-self: center;
     position: absolute;
     justify-self: center;
-    left: 70%;
+    right: 10%;
+`;
+
+export const Time = styled.p`
+    color: white;
+    font-weight: bolder;
+    font-size: 32px;
+    align-self: center;
+    position: absolute;
+    justify-self: center;
+    top: 96px;
+    right: 10%;
 `;
 
 export const ModalText = styled.div`
     font-weight: bolder;
     font-size: 32px;
     color: gold;
-    margin-top: 16px;
-    margin-bottom: 16px;
     white-space: nowrap;
+    margin-bottom: 16px;
+`;
+
+export const ModalTime = styled.div`
+    font-weight: bolder;
+    font-size: 24px;
+    color: gold;
+    white-space: nowrap;
+    margin-bottom: 16px;
+    margin-top: -16px;
 `;

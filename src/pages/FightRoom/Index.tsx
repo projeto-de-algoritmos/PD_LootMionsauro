@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns, ModalText, Heal, Portrait } from "./Style";
+import { useEffect, useState, useRef } from "react";
+import { BossArea, ButtonsArea, Container, Health, HealthBar, HealthValue, Mionsauro, Turns, ModalText, Heal, Portrait, Time, ModalTime } from "./Style";
 import GlobalButton from "../../components/GlobalButton/Index";
 import { CoinChange } from "../../utils/CoinChanging";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +18,35 @@ const FightRoom = () => {
     const [healthBarPercentage, setHealthBarPercentage] = useState<number>(100);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [win, setWin] = useState<boolean>(false);
-    const [healing, setHealing] = useState(false);
+    const [healing, setHealing] = useState<boolean>(false);
+    const [minutes, setMinutes] = useState<number>(0);
+    const [seconds, setSeconds] = useState<number>(0);;
     const difficulty: string = LocalStorage.getDifficulty();
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const navigate = useNavigate();
     const attacks: number[] = [5, 10, 15, 25, 40, 50, 55, 80, 100, 120, 155, 175, 250];
+
+    const startTimer = () => {
+        if (timerRef.current) {
+            return;
+        }
+
+        const newTimer = setInterval(() => {
+            setSeconds((prevSeconds) => prevSeconds + 1);
+        }, 1000); // Executa a função a cada 1 segundo
+
+        timerRef.current = newTimer;
+    };
+
+    const stopTimer = () => {
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
+
 
     const generateBossLifeTotal = () => {
         const min = 200;
@@ -55,6 +79,8 @@ const FightRoom = () => {
 
     const generateValues = () => {
         setWin(false);
+        setSeconds(0);
+        setMinutes(0);
         getRandomAttacks();
         generateBossLifeTotal();
     };
@@ -98,6 +124,7 @@ const FightRoom = () => {
     const Retry = () => {
         setBossLifeCurrent(bossLifeTotal);
         setRemainingTurns(totalTurns);
+        startTimer();
     };
 
     const toggleModal = () => {
@@ -142,7 +169,8 @@ const FightRoom = () => {
             setIsLoading(true);
             generateValues();
         }
-
+        stopTimer();
+        startTimer();
     }, [isLoading]);
 
     useEffect(() => {
@@ -155,12 +183,27 @@ const FightRoom = () => {
 
     useEffect(() => {
         if (bossLifeCurrent === 0) {
+            stopTimer();
             setWin(true);
             setShowModal(true);
         } else if (remainngTurns <= 0 && totalTurns > 0) {
+            stopTimer();
             setShowModal(true);
         }
     }, [bossLifeCurrent, remainngTurns]);
+
+    useEffect(() => {
+        if (seconds === 60) {
+            setSeconds(0);
+            setMinutes((prevMinutes) => prevMinutes + 1);
+        }
+    }, [seconds]);
+
+    useEffect(() => {
+        if (showModal) {
+            stopTimer();
+        }
+    }, [showModal]);
 
     return (
         <Container>
@@ -168,7 +211,8 @@ const FightRoom = () => {
                 <HealthBar>
                     <Health health={healthBarPercentage} />
                     <HealthValue>{bossLifeCurrent}/{bossLifeTotal}</HealthValue>
-                    <Turns>Remaining Turns {remainngTurns}/{totalTurns}</Turns>
+                    <Turns>Turns {remainngTurns < 10 && '0'}{remainngTurns}/{totalTurns < 10 && '0'}{totalTurns}</Turns>
+                    <Time>Time {minutes < 10 && '0'}{minutes} : {seconds < 10 && '0'}{seconds}</Time>
                 </HealthBar>
                 <Portrait>
                     <Mionsauro src={require("../../assets/Boss.png")} isBlinking={isBlinking} />
@@ -183,11 +227,17 @@ const FightRoom = () => {
                 <GlobalButton onClick={Run} text="Run" primary={false} />
             </ButtonsArea>
             <Modal isShown={showModal}>
-                {win ? <ModalText>You've beaten Mionsauro!</ModalText> : <ModalText>You lost to Mionsauro.</ModalText>}
-                {!win && <GlobalButton onClick={() => {
-                    Retry();
-                    toggleModal();
-                }} text='Retry' primary={true} />}
+                {win ?
+                    <>
+                        <ModalText>You've beaten Mionsauro!</ModalText>
+                        <ModalTime>Time {minutes < 10 && '0'}{minutes} : {seconds < 10 && '0'}{seconds}</ModalTime>
+                    </> : <>
+                        <ModalText>You lost to Mionsauro.</ModalText>
+                        <GlobalButton onClick={() => {
+                            Retry();
+                            toggleModal();
+                        }} text='Retry' primary={true} />
+                    </>}
                 <GlobalButton onClick={() => {
                     PlayAgain();
                     toggleModal();
