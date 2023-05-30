@@ -31,6 +31,7 @@ A vida do monstro e o poder dos ataques disponíveis são gerados aleatóriament
 
 ## Vídeo de Apresentação
 
+[Clique aqui para acessar o nosso vídeo!!](/Apresentacao.mp4)
 
 ## Instalação 
 **Linguagem**: Typescript<br>
