@@ -67,6 +67,6 @@ npm start
 Após realizar esses passos, a plataforma estará rodando na [porta 3000](http://localhost:3000/)
 ## Uso 
 
-Para jogar basta selecionar a opção fight no menu inicial. Na batalha selecione os ataques e bole uma estratégia para derrotar o monstro dentro da quantidade máxima de turnos.
+Para jogar basta selecionar a opção fight no menu inicial. Na batalha selecione os ataques e bole uma estratégia para derrotar o monstro dentro da quantidade máxima de turnos. Também é possível selecionar a dificuldade, que poderá adicionar alguns turnos extras permitindo novas combinações e uma margem de erro.
 
 ## Outros 
