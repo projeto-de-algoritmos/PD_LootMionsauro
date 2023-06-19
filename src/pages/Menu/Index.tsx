@@ -17,6 +17,9 @@ const Menu = () => {
     const startFight = () => {
         navigate(`/fight`);
     };
+    const lootTreasure = () => {
+        navigate(`/loot`);
+    };
 
     useEffect(() => {
         setDifficulty(LocalStorage.getDifficulty());
@@ -29,7 +32,9 @@ const Menu = () => {
             </Header>
             <Body>
                 <GlobalButton onClick={startFight} text="Fight" primary={true} />
+                <GlobalButton onClick={lootTreasure} text="Loot" primary={true} />
                 <GlobalButton onClick={toggleModal} text="Difficulty" primary={true} />
+
             </Body>
             <Modal isShown={showModal} hide={toggleModal}>
                 <ModalComponentBox>

@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Menu from "./pages/Menu/Index";
 import FightRoom from "./pages/FightRoom/Index";
+import TreasureRoom from "./pages/TreasureRoom/Index";
 
 const Router = createBrowserRouter([
     {
@@ -11,7 +12,10 @@ const Router = createBrowserRouter([
         element: <Menu />
     }, {
         path: '/fight',
-        element: <FightRoom /> 
+        element: <FightRoom />
+    }, {
+        path: '/loot',
+        element: <TreasureRoom />
     }
 ]);
 

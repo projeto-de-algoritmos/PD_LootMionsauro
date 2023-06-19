@@ -2,7 +2,6 @@ interface Treasure {
     image: string;
     value: number;
     weight: number;
-
 }
 
 export const Treasures: Treasure[] = [
