@@ -30,3 +30,15 @@ export const Picture = styled.img`
     width: 62px;
     margin-bottom: 8px;
 `
+
+export const IconImage = styled.img<{ size: number }>`
+    width: ${(props) => props.size}px;
+    height: 20px;
+    margin-left: 5px;
+`;
+
+export const IconText = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`

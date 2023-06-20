@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Container, Information, Picture } from "./Style";
+import { useEffect, useState } from "react";
+import { Container, IconImage, IconText, Information, Picture } from "./Style";
 
 interface TreasureCardProps {
     image: string | undefined;
@@ -25,7 +25,7 @@ const TreasureCard = ({
 
     const togleSelected = () => {
         setSelected(!selected);
-    }
+    };
 
     const select = () => {
         if (value && weight) {
@@ -38,14 +38,26 @@ const TreasureCard = ({
             }
         }
         togleSelected();
-    }
+    };
+
+    useEffect(() => {
+        setSelected(false);
+    }, [weight, image, value]);
+
     return (
         <Container selected={selected} onClick={select}>
             {image != undefined &&
                 <>
                     <Picture src={require(`../../assets/treasures/${image}`)} alt={image} />
-                    <Information>{value} $</Information>
-                    <Information>{weight} oz</Information>
+                    <IconText>
+                       <Information>{value && value < 10 && '0'}{value}</Information>
+                       <IconImage size={20} src={require('../../assets/BlackCoin.png')}/> 
+                    </IconText>
+                    <IconText>
+                        <Information>{weight && weight < 10 && '0'}{weight}</Information>
+                        <IconImage size={20} src={require('../../assets/BlackWeight.png')}/>
+                    </IconText>
+                    
                 </>
             }
         </Container>

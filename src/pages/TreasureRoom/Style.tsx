@@ -66,4 +66,15 @@ export const ButtonArea = styled.div`
     justify-content: center;
     flex-direction: row;
     gap: 8px;
+`;
+
+export const IconImage = styled.img<{ size: number }>`
+    height: ${(props) => props.size}px;
+    margin-left: 5px;
+`;
+
+export const IconText = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 `

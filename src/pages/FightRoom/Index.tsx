@@ -20,7 +20,7 @@ const FightRoom = () => {
     const [win, setWin] = useState<boolean>(false);
     const [healing, setHealing] = useState<boolean>(false);
     const [minutes, setMinutes] = useState<number>(0);
-    const [seconds, setSeconds] = useState<number>(0);;
+    const [seconds, setSeconds] = useState<number>(0);
     const difficulty: string = LocalStorage.getDifficulty();
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
