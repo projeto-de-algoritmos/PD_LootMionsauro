@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.div<{ selected: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,6 +14,9 @@ export const Container = styled.div`
     margin-bottom: 4px;
     margin-right: 4px;
     margin-left: 4px;
+    border-width: 3.5px;
+    border-color: ${(props) => props.selected ? 'gold' : 'white'};
+    border-style: solid;
 `
 
 export const Information = styled.p`

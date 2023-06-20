@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { Treasure, getRandomLoot } from "../../utils/Treasures";
 import GlobalButton from "../../components/GlobalButton/Index";
-import { Container, LootGrid, LootTable } from "./Style";
+import { ButtonArea, Container, HeaderText, LootGrid, LootTable, TableText, Variables } from "./Style";
 import TreasureCard from "../../components/TreasureCard/Index";
 
 const TreasureRoom = () => {
 
     const [items, setItems] = useState<Treasure[]>([]);
+    const [lootWeight, setLootWeight] = useState<number>(0);
+    const [lootValue, setLootValue] = useState<number>(0);
 
     useEffect(() => {
-        setItems(getRandomLoot(15));
+        setItems(getRandomLoot(18));
     }, []);
 
     const test = () => {
@@ -23,6 +25,10 @@ const TreasureRoom = () => {
                     image={item.image}
                     weight={item.weight}
                     value={item.value}
+                    setLootValue={setLootValue}
+                    setLootWeight={setLootWeight}
+                    lootValue={lootValue}
+                    lootWeight={lootWeight}
                 />
             ))
         )
@@ -30,12 +36,21 @@ const TreasureRoom = () => {
 
     return (
         <Container>
+            <HeaderText>Treasure Room</HeaderText>
             <LootTable>
+                <TableText>
+                    <Variables>{lootValue} $</Variables>
+                    <Variables>{lootWeight}/100 oz</Variables>
+                    <Variables>00:00</Variables>
+                </TableText>
                 <LootGrid>
                     {renderCards()}
                 </LootGrid>
             </LootTable>
-            <GlobalButton onClick={test} text="test" primary={false} />
+            <ButtonArea>
+                <GlobalButton onClick={test} text="Run" primary={false} />
+                <GlobalButton onClick={test} text="Loot" primary={false} />
+            </ButtonArea>
         </Container>
 
     );
