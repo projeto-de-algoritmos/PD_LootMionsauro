@@ -6,7 +6,8 @@ import TreasureCard from "../../components/TreasureCard/Index";
 import { knapsack } from "../../utils/Knapsack";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal/Index";
-import { ModalText, ModalTime } from "../FightRoom/Style";
+import { ModalText } from "../FightRoom/Style";
+import LocalStorage from "../../LocalStorage";
 
 const TreasureRoom = () => {
 
@@ -18,10 +19,24 @@ const TreasureRoom = () => {
     const [minutes, setMinutes] = useState<number>(0);
     const [seconds, setSeconds] = useState<number>(59);
     const [showModal, setShowModal] = useState<boolean>(false);
+    const difficulty: string = LocalStorage.getDifficulty();
     const capacity = 100;
 
     const navigate = useNavigate();
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const initialTime = () => {
+        if (difficulty === 'easy') {
+            setMinutes(1);
+            setSeconds(59);
+        } else if (difficulty === 'medium') {
+            setMinutes(1);
+            setSeconds(29);
+        } else {
+            setMinutes(0);
+            setSeconds(59);
+        }
+    }
 
     const startTimer = () => {
         if (timerRef.current) {
@@ -49,21 +64,20 @@ const TreasureRoom = () => {
     useEffect(() => {
         if (items.length > 0) {
             setBestLoot(knapsack(items, capacity));
-            setSeconds(59);
+            initialTime();
             startTimer();
         }
     }, [items]);
 
     useEffect(() => {
-        if (seconds === 0) {
+        if (seconds < 0 && minutes > 0) {
+            setMinutes((prevMinutes) => prevMinutes - 1);
+            setSeconds(59);
+        } else if (seconds === 0 && minutes === 0) {
             stopTimer();
             toggleModal();
         }
-    }, [seconds]);
-
-    const test = () => {
-        console.log(items);
-    }
+    }, [seconds, minutes]);
 
     const Run = () => {
         navigate('./menu');
@@ -93,6 +107,7 @@ const TreasureRoom = () => {
         setItems(getRandomLoot(18));
         setLootValue(0);
         setLootWeight(0);
+        setSuccess(false);
     };
 
     const Loot = () => {
@@ -117,7 +132,7 @@ const TreasureRoom = () => {
                         <IconImage size={30} src={require('../../assets/Weight.png')} />
                     </IconText>
                     <IconText>
-                        <Variables>{minutes < 10 && 0}{minutes}:{seconds < 10 && 0}{seconds}</Variables>
+                        <Variables>{minutes < 10 && 0}{minutes}:{seconds >= 0 && seconds < 10 && 0}{seconds}</Variables>
                         <IconImage size={30} src={require('../../assets/time.png')} />
                     </IconText>
                 </TableText>
