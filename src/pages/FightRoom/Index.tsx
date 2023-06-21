@@ -34,7 +34,7 @@ const FightRoom = () => {
 
         const newTimer = setInterval(() => {
             setSeconds((prevSeconds) => prevSeconds + 1);
-        }, 1000); // Executa a função a cada 1 segundo
+        }, 1000);
 
         timerRef.current = newTimer;
     };

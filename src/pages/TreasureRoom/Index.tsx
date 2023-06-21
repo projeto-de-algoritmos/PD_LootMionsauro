@@ -3,7 +3,7 @@ import { Treasure, getRandomLoot } from "../../utils/Treasures";
 import GlobalButton from "../../components/GlobalButton/Index";
 import { ButtonArea, Container, HeaderText, IconImage, IconText, LootGrid, LootTable, TableText, Variables } from "./Style";
 import TreasureCard from "../../components/TreasureCard/Index";
-import { knapsack } from "../../utils/Knapsack";
+import { knapsack, knapsackDivideAndConquer } from "../../utils/Knapsack";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal/Index";
 import { ModalText } from "../FightRoom/Style";
@@ -36,7 +36,7 @@ const TreasureRoom = () => {
             setMinutes(0);
             setSeconds(59);
         }
-    }
+    };
 
     const startTimer = () => {
         if (timerRef.current) {
@@ -45,7 +45,7 @@ const TreasureRoom = () => {
 
         const newTimer = setInterval(() => {
             setSeconds((prevSeconds) => prevSeconds - 1);
-        }, 1000); // Executa a função a cada 1 segundo
+        }, 1000);
 
         timerRef.current = newTimer;
     };
@@ -64,6 +64,7 @@ const TreasureRoom = () => {
     useEffect(() => {
         if (items.length > 0) {
             setBestLoot(knapsack(items, capacity));
+            // setBestLoot(knapsackDivideAndConquer(items, capacity, 0, items.length - 1));
             initialTime();
             startTimer();
         }
@@ -81,7 +82,7 @@ const TreasureRoom = () => {
 
     const Run = () => {
         navigate('./menu');
-    }
+    };
 
     const renderCards = () => {
         return (
@@ -97,7 +98,7 @@ const TreasureRoom = () => {
                 />
             ))
         )
-    }
+    };
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -111,12 +112,12 @@ const TreasureRoom = () => {
     };
 
     const Loot = () => {
-        if (lootValue === bestLoot && lootWeight <= capacity) {
+        if (lootValue >= bestLoot && lootWeight <= capacity) {
             setSuccess(true);
         }
         stopTimer();
         toggleModal();
-    }
+    };
 
     return (
         <Container>
